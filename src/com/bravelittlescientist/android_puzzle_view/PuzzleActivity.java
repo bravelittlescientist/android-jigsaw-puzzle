@@ -5,8 +5,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class PuzzleActivity extends Activity {
 
@@ -19,6 +22,11 @@ public class PuzzleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.puzzle_layout);
 
         // Initialize puzzle view and create new puzzle game
@@ -46,6 +54,8 @@ public class PuzzleActivity extends Activity {
         i.setImageBitmap(decodedPuzzleResource);
 
         rL.addView(i, lP);
+        Toast.makeText(this, decodedPuzzleResource.getWidth() + " " + decodedPuzzleResource.getHeight(),
+                Toast.LENGTH_LONG).show();
     }
 
     /**
