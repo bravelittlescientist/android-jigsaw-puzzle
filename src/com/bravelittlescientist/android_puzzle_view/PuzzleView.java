@@ -89,6 +89,14 @@ public class PuzzleView extends View {
         return puzzlePiecesArray;
     }
 
+    public int[] getPuzzleDimensions () {
+        return new int[] { puzzleXDimension, puzzleYDimension, puzzleGridX, puzzleGridY };
+    }
+
+    public int[][] getPuzzlePieceTargetPositions () {
+        return puzzlePieceTargetPositions;
+    }
+
     /** State and Execution **/
     public void run() {
 

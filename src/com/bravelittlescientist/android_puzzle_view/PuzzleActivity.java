@@ -39,13 +39,17 @@ public class PuzzleActivity extends Activity {
 
         /** The following is temporary display code **/
         Bitmap[] p = puzzleView.getPuzzlePiecesArray();
-        LinearLayout l = (LinearLayout) findViewById(R.id.puzzle_overlay_layout);
+        int[] pDimensions = puzzleView.getPuzzleDimensions();
+
+        GridLayout gL = (GridLayout) findViewById(R.id.puzzle_overlay_layout);
+        gL.setColumnCount(pDimensions[3]);
+        gL.setRowCount(pDimensions[2]);
 
         for (int i = 0; i < p.length; i++) {
             ImageView iV = new ImageView(this);
             BitmapDrawable bMP = new BitmapDrawable(p[i]);
             iV.setImageDrawable(bMP);
-            l.addView(iV);
+            gL.addView(iV);
         }
 
         /** End temporary display code **/

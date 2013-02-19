@@ -15,12 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:id="@+id/puzzle_overlay_layout">
-        </LinearLayout>
+        <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/puzzle_overlay_layout"
+                android:columnCount="2"
+                android:rowCount="2">
+        </GridLayout>
 
     </FrameLayout>
 </HorizontalScrollView>
