@@ -22,6 +22,7 @@ public class PuzzleView extends View {
     public PuzzleView (Context context, AttributeSet attrs) {
         super(context, attrs);
 
+
     }
 
     /** State and Execution **/
@@ -38,6 +39,10 @@ public class PuzzleView extends View {
     }
 
     public void clear() {
+
+    }
+
+    public void addPuzzlePiece () {
 
     }
 
