@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.*;
+
+import java.math.BigInteger;
 
 public class PuzzleActivity extends Activity {
 
@@ -31,21 +32,30 @@ public class PuzzleActivity extends Activity {
 
         // Initialize puzzle view and create new puzzle game
         puzzleView = (PuzzleView) findViewById(R.id.puzzle_base);
-        puzzleView.run();
 
-        // Prepare Puzzle Image
-        loadPuzzleResources();
+        // Prepare Puzzle View
+        Bitmap puzzle = loadPuzzleResources();
+        puzzleView.setPuzzleResource(puzzle);
+
+        /** The following is temporary display code **/
+        Bitmap[] p = puzzleView.getPuzzlePiecesArray();
+        LinearLayout l = (LinearLayout) findViewById(R.id.puzzle_overlay_layout);
+
+        for (int i = 0; i < p.length; i++) {
+            ImageView iV = new ImageView(this);
+            BitmapDrawable bMP = new BitmapDrawable(p[i]);
+            iV.setImageDrawable(bMP);
+            l.addView(iV);
+        }
+
+        /** End temporary display code **/
+
     }
 
     /**
      * showPuzzleSource
      */
-    public void loadPuzzleResources () {
-
-        RelativeLayout rL = (RelativeLayout) findViewById(R.id.puzzle_overlay_layout);
-        RelativeLayout.LayoutParams lP = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
+    public Bitmap loadPuzzleResources () {
 
         long targetWidth =  Math.round(0.75 * getWindowManager().getDefaultDisplay().getWidth());
         long targetHeight = Math.round(0.75 * getWindowManager().getDefaultDisplay().getHeight());
@@ -53,12 +63,7 @@ public class PuzzleActivity extends Activity {
         Bitmap decodedPuzzleResource = decodePuzzleBitmapFromResource(
                 getResources(), R.drawable.kitten_large, targetWidth, targetHeight);
 
-        ImageView i = new ImageView(this);
-        i.setImageBitmap(decodedPuzzleResource);
-
-        rL.addView(i, lP);
-        Toast.makeText(this, decodedPuzzleResource.getWidth() + " " + decodedPuzzleResource.getHeight(),
-                Toast.LENGTH_LONG).show();
+        return decodedPuzzleResource;
     }
 
     /**
