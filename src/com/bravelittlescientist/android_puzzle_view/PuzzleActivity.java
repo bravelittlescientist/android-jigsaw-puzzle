@@ -34,21 +34,24 @@ public class PuzzleActivity extends Activity {
         puzzleView.run();
 
         // Prepare Puzzle Image
-        showPuzzleSource();
+        loadPuzzleResources();
     }
 
     /**
      * showPuzzleSource
      */
-    public void showPuzzleSource () {
+    public void loadPuzzleResources () {
 
         RelativeLayout rL = (RelativeLayout) findViewById(R.id.puzzle_overlay_layout);
         RelativeLayout.LayoutParams lP = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
+        long targetWidth =  Math.round(0.75 * getWindowManager().getDefaultDisplay().getWidth());
+        long targetHeight = Math.round(0.75 * getWindowManager().getDefaultDisplay().getHeight());
+
         Bitmap decodedPuzzleResource = decodePuzzleBitmapFromResource(
-                getResources(), R.drawable.kitten_large, 100, 100);
+                getResources(), R.drawable.kitten_large, targetWidth, targetHeight);
 
         ImageView i = new ImageView(this);
         i.setImageBitmap(decodedPuzzleResource);
@@ -64,7 +67,7 @@ public class PuzzleActivity extends Activity {
      * Bitmap Loading Code from Android Developer lesson: "Loading Large Bitmaps Efficiently"
      */
     public static Bitmap decodePuzzleBitmapFromResource (
-            Resources res, int resId, int targetWidth, int targetHeight) {
+            Resources res, int resId, long targetWidth, long targetHeight) {
 
         // Load only the dimensions of the puzzle image
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -85,7 +88,7 @@ public class PuzzleActivity extends Activity {
      * Adapted from Android Developer lesson: "Loading Large Bitmaps Efficiently"
      */
     public static int calculateScaledPuzzleSize (
-            BitmapFactory.Options options, int targetWidth, int targetHeight) {
+            BitmapFactory.Options options, long targetWidth, long targetHeight) {
 
         // Source Image Dimensions
         final int height = options.outHeight;
