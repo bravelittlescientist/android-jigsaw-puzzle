@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.*;
@@ -15,6 +16,8 @@ import java.math.BigInteger;
 public class PuzzleActivity extends Activity {
 
     private PuzzleView puzzleView;
+    private PuzzleSurfaceView puzzleSurfaceView;
+    private PuzzleGameThread puzzleThread;
 
     private static final String TAG = "PuzzleActivity";
 
@@ -30,8 +33,19 @@ public class PuzzleActivity extends Activity {
 
         setContentView(R.layout.puzzle_layout);
 
-        // Initialize puzzle view and create new puzzle game
+        puzzleSurfaceView = (PuzzleSurfaceView) findViewById(R.id.puzzle_surface);
+        puzzleThread = puzzleSurfaceView.getGameThread();
         puzzleView = (PuzzleView) findViewById(R.id.puzzle_base);
+
+        if (savedInstanceState == null) {
+            // On new Puzzle
+            puzzleThread.setState(PuzzleGameThread.STATE_READY);
+            Log.w(this.getClass().getName(), "SIS is null");
+        } else {
+            // Restoring previous puzzle
+            puzzleThread.restorePuzzleState(savedInstanceState);
+            Log.w(this.getClass().getName(), "SIS is not null");
+        }
 
         // Prepare Puzzle View
         Bitmap puzzle = loadPuzzleResources();
@@ -123,6 +137,7 @@ public class PuzzleActivity extends Activity {
         super.onPause();
 
         puzzleView.pause();
+        puzzleSurfaceView.getGameThread().pause();
     }
 
     @Override
@@ -130,5 +145,12 @@ public class PuzzleActivity extends Activity {
         super.onResume();
 
         puzzleView.resume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        puzzleThread.savePuzzleState(outState);
+        Log.w(this.getClass().getName(), "SIS called");
     }
 }
