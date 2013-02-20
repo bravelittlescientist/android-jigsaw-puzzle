@@ -2,16 +2,10 @@ package com.bravelittlescientist.android_puzzle_view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 public class PuzzleActivity extends Activity {
 
-    private PuzzleSurfaceView puzzleSurfaceView;
-    private PuzzleGameThread puzzleThread;
+    private PuzzleCompactSurface puzzleSurface;
 
     private static final String TAG = "PuzzleActivity";
 
@@ -21,22 +15,8 @@ public class PuzzleActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.puzzle_layout);
-
-        puzzleSurfaceView = (PuzzleSurfaceView) findViewById(R.id.puzzle_surface);
-        puzzleThread = puzzleSurfaceView.getGameThread();
-
-        puzzleSurfaceView.setTextView((TextView) findViewById(R.id.text));
-
-        if (savedInstanceState == null) {
-            // On new Puzzle
-            puzzleThread.setState(PuzzleGameThread.STATE_READY);
-            Log.w(this.getClass().getName(), "SIS is null");
-        } else {
-            // Restoring previous puzzle
-            puzzleThread.restorePuzzleState(savedInstanceState);
-            Log.w(this.getClass().getName(), "SIS is not null");
-        }
+        puzzleSurface = new PuzzleCompactSurface(this);
+        setContentView(puzzleSurface);
 
         /** The following is temporary display code **/
         /*Bitmap[] p = puzzleThread.getPuzzlePiecesArray();
@@ -54,20 +34,18 @@ public class PuzzleActivity extends Activity {
         } */
 
         /** End temporary display code **/
-        puzzleThread.startPuzzle();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        puzzleSurfaceView.getGameThread().pause();
+        puzzleSurface.pause();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        puzzleThread.savePuzzleState(outState);
-        Log.w(this.getClass().getName(), "SIS called");
+    protected void onResume() {
+        super.onResume();
+        puzzleSurface.resume();
     }
 }
