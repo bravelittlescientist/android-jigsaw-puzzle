@@ -16,7 +16,9 @@ public class PuzzleCompactSurface extends SurfaceView implements Runnable {
     private volatile boolean running = false;
 
     /** Puzzle and Canvas **/
+    private int MAX_PUZZLE_PIECE_SIZE = 100;
     private JigsawPuzzle puzzle;
+    private BitmapDrawable[] scaledSurfacePuzzlePieces;
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     BitmapDrawable sample;
@@ -51,7 +53,9 @@ public class PuzzleCompactSurface extends SurfaceView implements Runnable {
             if (surfaceHolder.getSurface().isValid()) {
                 Canvas c = surfaceHolder.lockCanvas();
 
-                sample.draw(c);
+                for (int bmd = 0; bmd < scaledSurfacePuzzlePieces.length; bmd++) {
+                    scaledSurfacePuzzlePieces[bmd].draw(c);
+                }
 
                 surfaceHolder.unlockCanvasAndPost(c);
             }
@@ -60,8 +64,15 @@ public class PuzzleCompactSurface extends SurfaceView implements Runnable {
 
     public void setPuzzle(JigsawPuzzle jigsawPuzzle) {
         puzzle = jigsawPuzzle;
-        Bitmap[] m = puzzle.getPuzzlePiecesArray();
-        sample = new BitmapDrawable(m[0]);
-        sample.setBounds(0, 0, m[0].getWidth(), m[0].getHeight());
+
+        /** Initialize drawables from puzzle pieces **/
+        Bitmap[] originalPieces = puzzle.getPuzzlePiecesArray();
+        scaledSurfacePuzzlePieces = new BitmapDrawable[originalPieces.length];
+        for (int i = 0; i < originalPieces.length; i++) {
+            scaledSurfacePuzzlePieces[i] = new BitmapDrawable(originalPieces[i]);
+            scaledSurfacePuzzlePieces[i].setBounds(i*MAX_PUZZLE_PIECE_SIZE, 0,
+                    i*MAX_PUZZLE_PIECE_SIZE + MAX_PUZZLE_PIECE_SIZE, MAX_PUZZLE_PIECE_SIZE);
+        }
+
     }
 }
