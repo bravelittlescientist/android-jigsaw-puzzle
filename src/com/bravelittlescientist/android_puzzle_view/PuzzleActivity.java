@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class PuzzleActivity extends Activity {
 
@@ -24,6 +25,8 @@ public class PuzzleActivity extends Activity {
 
         puzzleSurfaceView = (PuzzleSurfaceView) findViewById(R.id.puzzle_surface);
         puzzleThread = puzzleSurfaceView.getGameThread();
+
+        puzzleSurfaceView.setTextView((TextView) findViewById(R.id.text));
 
         if (savedInstanceState == null) {
             // On new Puzzle

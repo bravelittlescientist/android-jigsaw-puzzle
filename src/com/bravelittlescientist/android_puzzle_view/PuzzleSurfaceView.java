@@ -13,6 +13,7 @@ public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private Context puzzleContext;
     private PuzzleGameThread gameThread;
+    private TextView statusText;
 
     private static final String TAG = "PuzzleSurfaceView";
 
@@ -27,8 +28,8 @@ public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Call
             @Override
             public void handleMessage(Message m) {
 
-                //statusText.setVisibility(m.getData().getInt("visibility"));
-                //statusText.setText(m.getData().getString("text"));
+                statusText.setVisibility(m.getData().getInt("visibility"));
+                statusText.setText(m.getData().getString("text"));
             }
         });
 
@@ -42,6 +43,10 @@ public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         if (!hasWindowFocus) gameThread.pause();
+    }
+
+    public void setTextView(TextView textView) {
+        statusText = textView;
     }
 
     @Override

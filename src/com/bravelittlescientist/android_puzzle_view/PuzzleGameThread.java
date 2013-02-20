@@ -58,13 +58,12 @@ public class PuzzleGameThread extends Thread {
         puzzleFrameLinePaint = new Paint();
         puzzleFrameLinePaint.setAntiAlias(true);
         puzzleFrameLinePaint.setARGB(120, 120, 180, 0);
+
+        loadPuzzleResources();
     }
 
     public void startPuzzle () {
         synchronized (holder) {
-            // Puzzle Initialization Code
-            //loadPuzzleResources();
-
             setState(STATE_RUNNING);
         }
     }
@@ -82,9 +81,6 @@ public class PuzzleGameThread extends Thread {
     public synchronized void restorePuzzleState (Bundle savedState) {
         synchronized (holder) {
             setState(STATE_PAUSE);
-
-            // TODO Restore Puzzle settings from Bundle
-            // savedState.getInt(KEY)
         }
     }
 
@@ -104,6 +100,7 @@ public class PuzzleGameThread extends Thread {
             Canvas c = null;
             try {
                 c = holder.lockCanvas(null);
+                Toast.makeText(puzzleContext, "Made it somewhere", Toast.LENGTH_SHORT).show();
                 synchronized (holder) {
                     if (puzzleState == STATE_RUNNING) updatePuzzleFrame();
                     drawPuzzleCanvas(c);
@@ -136,15 +133,15 @@ public class PuzzleGameThread extends Thread {
     }
 
     private void drawPuzzleCanvas(Canvas canvas) {
-        BitmapDrawable bmd = new BitmapDrawable(puzzleResult);
-        bmd.draw(canvas);
+        //BitmapDrawable bmd = new BitmapDrawable(puzzleResult);
+        //bmd.draw(canvas);
 
         // Draw background image if it exists
         // canvas.drawBitmap(backgroundImage, 0, 0, null);
 
         // Draw Puzzle result frame
-        puzzleFrame.set(20, 200, 400, 200);
-        canvas.drawRect(puzzleFrame, puzzleFrameLinePaint);
+        //puzzleFrame.set(20, 200, 400, 200);
+        //canvas.drawRect(puzzleFrame, puzzleFrameLinePaint);
 
     }
 
