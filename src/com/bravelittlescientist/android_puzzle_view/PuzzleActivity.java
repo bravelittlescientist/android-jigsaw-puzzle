@@ -1,17 +1,13 @@
 package com.bravelittlescientist.android_puzzle_view;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.*;
-
-import java.math.BigInteger;
 
 public class PuzzleActivity extends Activity {
 
