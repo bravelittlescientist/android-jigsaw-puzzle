@@ -4,12 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Eugenia Gabrielova <genia.likes.science@gmail.com>
- * Date: 2/20/13
- * Time: 2:27 AM
- */
 public class JigsawPuzzle {
 
     protected static int puzzleXDimension;
@@ -25,8 +19,9 @@ public class JigsawPuzzle {
     private Bitmap[] puzzlePiecesArray;
     private int[][] puzzlePieceTargetPositions;
 
-    public JigsawPuzzle() {
-
+    public JigsawPuzzle(Resources res, Integer resourceId) {
+        loadPuzzleResources(res, resourceId);
+        buildDynamicPuzzleGrid();
     }
 
     public void loadPuzzleResources (Resources res, int resourceId) {
@@ -36,7 +31,9 @@ public class JigsawPuzzle {
         Bitmap decodedPuzzleResource = decodePuzzleBitmapFromResource(
                 res, resourceId, targetWidth, targetHeight);
 
-        setPuzzleResource(decodedPuzzleResource);
+        puzzleResult = decodedPuzzleResource;
+        puzzleXDimension = decodedPuzzleResource.getWidth();
+        puzzleYDimension = decodedPuzzleResource.getHeight();
     }
 
     /**
@@ -90,21 +87,6 @@ public class JigsawPuzzle {
         }
 
         return imageScaleRatio;
-    }
-
-    /**
-     * setPuzzleResource
-     * @param bm    Memory-scaled bitmap representing puzzle target.
-     *
-     * TODO: Make sure input image is valid.
-     */
-    public void setPuzzleResource(Bitmap bm) {
-        puzzleResult = bm;
-        puzzleXDimension = bm.getWidth();
-        puzzleYDimension = bm.getHeight();
-
-        // TODO: This should only happen here if user did not initialize PuzzleView with a grid
-        buildDynamicPuzzleGrid();
     }
 
     /**
