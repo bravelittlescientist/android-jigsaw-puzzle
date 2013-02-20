@@ -18,6 +18,7 @@ public class JigsawPuzzle {
     private Bitmap puzzleResult;
     private Bitmap[] puzzlePiecesArray;
     private int[][] puzzlePieceTargetPositions;
+    private boolean[] pieceLocked;
 
     public JigsawPuzzle(Resources res, Integer resourceId) {
         loadPuzzleResources(res, resourceId);
@@ -110,6 +111,7 @@ public class JigsawPuzzle {
         // Initialize and fill puzzle
         puzzlePieceTargetPositions = new int[puzzleGridX][puzzleGridY];
         puzzlePiecesArray = new Bitmap[puzzleGridX * puzzleGridY];
+        pieceLocked = new boolean[puzzleGridX * puzzleGridY];
 
         // Generate array of bitmaps
         int counter = 0;
@@ -118,7 +120,10 @@ public class JigsawPuzzle {
                 puzzlePiecesArray[counter] = Bitmap.createBitmap(puzzleResult,
                         w*puzzlePieceWidth, h*puzzlePieceHeight, puzzlePieceWidth, puzzlePieceHeight);
 
+                pieceLocked[counter] = false;
+
                 puzzlePieceTargetPositions[w][h] = counter;
+
 
                 counter++;
             }
@@ -152,4 +157,18 @@ public class JigsawPuzzle {
         return puzzlePieceTargetPositions;
     }
 
+    public void setPieceLocked (int piece, boolean locked) {
+        if (piece >= 0 && piece < pieceLocked.length) {
+            pieceLocked[piece] = locked;
+        }
+    }
+
+    public boolean isPieceLocked(int piece) {
+        if (piece >= 0 && piece < pieceLocked.length) {
+            return pieceLocked[piece];
+        } else {
+            return false;
+
+        }
+    }
 }

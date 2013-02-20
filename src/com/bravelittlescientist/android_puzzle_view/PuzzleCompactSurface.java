@@ -54,8 +54,12 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
     /** Puzzle and Canvas **/
     private int MAX_PUZZLE_PIECE_SIZE = 100;
+    private int LOCK_ZONE_LEFT = 200;
+    private int LOCK_ZONE_TOP = 100;
+
     private JigsawPuzzle puzzle;
     private BitmapDrawable[] scaledSurfacePuzzlePieces;
+    private Rect[] scaledSurfaceTargetBounds;
 
     public PuzzleCompactSurface(Context context) {
         super(context);
@@ -106,12 +110,29 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
         /** Initialize drawables from puzzle pieces **/
         Bitmap[] originalPieces = puzzle.getPuzzlePiecesArray();
+        int[][] positions = puzzle.getPuzzlePieceTargetPositions();
+        int[] dimensions = puzzle.getPuzzleDimensions();
+
         scaledSurfacePuzzlePieces = new BitmapDrawable[originalPieces.length];
+        scaledSurfaceTargetBounds = new Rect[originalPieces.length];
+
         for (int i = 0; i < originalPieces.length; i++) {
+
             scaledSurfacePuzzlePieces[i] = new BitmapDrawable(originalPieces[i]);
             scaledSurfacePuzzlePieces[i].setBounds(i*MAX_PUZZLE_PIECE_SIZE, 0,
                     i*MAX_PUZZLE_PIECE_SIZE + MAX_PUZZLE_PIECE_SIZE, MAX_PUZZLE_PIECE_SIZE);
-            //scaledSurfacePuzzlePieces[i].getPaint().setColor(Color.BLACK);
+        }
+
+        for (int w = 0; w < dimensions[2]; w++) {
+            for (int h = 0; h < dimensions[3]; h++) {
+                int targetPiece = positions[w][h];
+
+                scaledSurfaceTargetBounds[targetPiece] = new Rect(
+                        LOCK_ZONE_LEFT + w*MAX_PUZZLE_PIECE_SIZE,
+                        LOCK_ZONE_TOP + h*MAX_PUZZLE_PIECE_SIZE,
+                        LOCK_ZONE_LEFT + w*MAX_PUZZLE_PIECE_SIZE + MAX_PUZZLE_PIECE_SIZE,
+                        LOCK_ZONE_TOP + h*MAX_PUZZLE_PIECE_SIZE + MAX_PUZZLE_PIECE_SIZE);
+            }
         }
     }
 
@@ -147,14 +168,20 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
 
             case MotionEvent.ACTION_MOVE:
-                if (found >= 0 && found < scaledSurfacePuzzlePieces.length) {
-                    Rect rect = scaledSurfacePuzzlePieces[found].copyBounds();
-                    rect.left = xPos - MAX_PUZZLE_PIECE_SIZE/2;
-                    rect.top = yPos - MAX_PUZZLE_PIECE_SIZE/2;
-                    rect.right = xPos + MAX_PUZZLE_PIECE_SIZE/2;
-                    rect.bottom = yPos + MAX_PUZZLE_PIECE_SIZE/2;
-                    scaledSurfacePuzzlePieces[found].setBounds(rect);
-                    invalidate();
+                if (found >= 0 && found < scaledSurfacePuzzlePieces.length && !puzzle.isPieceLocked(found)) {
+                    // Lock into position...
+                    if (scaledSurfaceTargetBounds[found].contains(xPos, yPos) ) {
+                        scaledSurfacePuzzlePieces[found].setBounds(scaledSurfaceTargetBounds[found]);
+                        puzzle.setPieceLocked(found, true);
+                    } else {
+                        Rect rect = scaledSurfacePuzzlePieces[found].copyBounds();
+
+                        rect.left = xPos - MAX_PUZZLE_PIECE_SIZE/2;
+                        rect.top = yPos - MAX_PUZZLE_PIECE_SIZE/2;
+                        rect.right = xPos + MAX_PUZZLE_PIECE_SIZE/2;
+                        rect.bottom = yPos + MAX_PUZZLE_PIECE_SIZE/2;
+                        scaledSurfacePuzzlePieces[found].setBounds(rect);
+                    }
                 }
                 break;
 
