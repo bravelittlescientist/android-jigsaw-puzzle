@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -55,7 +56,7 @@ public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         gameThread.setRunning(true);
-        gameThread.startPuzzle();
+        gameThread.start();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class PuzzleSurfaceView extends SurfaceView implements SurfaceHolder.Call
                 gameThread.join();
                 retry = false;
             } catch (InterruptedException e) {
-
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -3,9 +3,11 @@ package com.bravelittlescientist.android_puzzle_view;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 public class PuzzleGameThread extends Thread {
 
@@ -36,8 +38,8 @@ public class PuzzleGameThread extends Thread {
     public static final int STATE_RUNNING = 3;
     public static final int STATE_COMPLETE = 4;
 
-    private int puzzleCanvasWidth = 1;
-    private int puzzleCanvasHeight = 1;
+    private int puzzleCanvasWidth = 100;
+    private int puzzleCanvasHeight = 100;
 
     // Drawing Variables
     private Rect puzzleFrame;
@@ -51,21 +53,17 @@ public class PuzzleGameThread extends Thread {
         messageHandler = handler;
         puzzleContext = context;
 
-        // Puzzle Initialization Code
-        loadPuzzleResources();
-
-        //Resources res = context.getResources();
-
         // Initialize puzzle holder
         puzzleFrame = new Rect(0, 0, 0, 0);
         puzzleFrameLinePaint = new Paint();
         puzzleFrameLinePaint.setAntiAlias(true);
-        puzzleFrameLinePaint.setARGB(255, 120, 180, 0);
+        puzzleFrameLinePaint.setARGB(120, 120, 180, 0);
     }
 
     public void startPuzzle () {
         synchronized (holder) {
-            // TODO: Set Puzzle initialization parameters here, if needed
+            // Puzzle Initialization Code
+            //loadPuzzleResources();
 
             setState(STATE_RUNNING);
         }
@@ -133,22 +131,21 @@ public class PuzzleGameThread extends Thread {
             puzzleCanvasWidth = width;
             puzzleCanvasHeight = height;
 
-            // TODO Scale puzzle background if one exists
-            // Bitmap Background = Bitmap.createScaledBitmap(currentBackgroundImage, width, height, true);
+            // TIP: This would be a good place to set the background image.
         }
     }
 
     private void drawPuzzleCanvas(Canvas canvas) {
+        BitmapDrawable bmd = new BitmapDrawable(puzzleResult);
+        bmd.draw(canvas);
+
         // Draw background image if it exists
         // canvas.drawBitmap(backgroundImage, 0, 0, null);
 
         // Draw Puzzle result frame
-        puzzleFrame.set(20, 20, 40, 60);
+        puzzleFrame.set(20, 200, 400, 200);
         canvas.drawRect(puzzleFrame, puzzleFrameLinePaint);
 
-        // TODO Draw puzzle pieces
-        // BitmapDrawable bm
-        // bm.draw(canvas)
     }
 
     private void updatePuzzleFrame () {

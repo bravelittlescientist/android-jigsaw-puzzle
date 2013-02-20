@@ -1,13 +1,11 @@
 package com.bravelittlescientist.android_puzzle_view;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.*;
 
 public class PuzzleActivity extends Activity {
 
@@ -43,7 +41,7 @@ public class PuzzleActivity extends Activity {
         }
 
         /** The following is temporary display code **/
-        Bitmap[] p = puzzleThread.getPuzzlePiecesArray();
+        /*Bitmap[] p = puzzleThread.getPuzzlePiecesArray();
         int[] pDimensions = puzzleThread.getPuzzleDimensions();
 
         GridLayout gL = (GridLayout) findViewById(R.id.puzzle_overlay_layout);
@@ -55,16 +53,16 @@ public class PuzzleActivity extends Activity {
             BitmapDrawable bMP = new BitmapDrawable(p[i]);
             iV.setImageDrawable(bMP);
             gL.addView(iV);
-        }
+        } */
 
         /** End temporary display code **/
+        puzzleThread.startPuzzle();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         puzzleSurfaceView.getGameThread().pause();
     }
 
