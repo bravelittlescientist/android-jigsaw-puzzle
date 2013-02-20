@@ -45,7 +45,7 @@ public class PuzzleView extends View {
     }
 
     /**
-     * initializePuzzleGrid
+     * buildDynamicPuzzleGrid
      *
      * If not already set, computes optimal puzzle piece size using Greatest Common Divisor.
      * Computes Bitmaps for each piece and sets their target positions.
