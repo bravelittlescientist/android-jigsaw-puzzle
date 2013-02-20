@@ -25,12 +25,10 @@ public class PuzzleActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        puzzleSurface.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        puzzleSurface.resume();
     }
 }
