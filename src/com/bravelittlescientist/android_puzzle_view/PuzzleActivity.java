@@ -20,15 +20,10 @@ public class PuzzleActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.puzzle_layout);
 
         puzzleSurfaceView = (PuzzleSurfaceView) findViewById(R.id.puzzle_surface);
         puzzleThread = puzzleSurfaceView.getGameThread();
-
 
         if (savedInstanceState == null) {
             // On new Puzzle
