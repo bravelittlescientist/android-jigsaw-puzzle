@@ -25,10 +25,12 @@ public class PuzzleActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        puzzleSurface.getThread().pause();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        puzzleSurface.getThread().saveState(outState);
     }
 }

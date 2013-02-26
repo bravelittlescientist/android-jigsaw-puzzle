@@ -10,43 +10,6 @@ import android.widget.Toast;
 
 public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.Callback {
 
-    public class PuzzleThread extends Thread {
-
-        private SurfaceHolder surfaceHolder;
-        private PuzzleCompactSurface surface;
-        private boolean running = false;
-
-        public PuzzleThread(SurfaceHolder holder, PuzzleCompactSurface puzzleSurface) {
-
-            surfaceHolder = getHolder();
-            surface = puzzleSurface;
-        }
-
-        public void setRunning(boolean run) {
-            running = run;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-
-            Canvas canvas;
-            while (running) {
-                canvas=null;
-                try {
-                    canvas = surfaceHolder.lockCanvas(null);
-                    synchronized (surfaceHolder) {
-                        surface.onDraw(canvas);
-                    }
-                } finally {
-                    if (canvas != null) {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
-                    }
-                }
-            }
-        }
-    }
-
     /** Surface Components **/
     private PuzzleThread gameThread;
     private volatile boolean running = false;
@@ -64,32 +27,22 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
     public PuzzleCompactSurface(Context context) {
         super(context);
 
-        gameThread = new PuzzleThread(getHolder(), this);
         getHolder().addCallback(this);
+
+        gameThread = new PuzzleThread(getHolder(), context, this);
+
         setFocusable(true);
     }
 
-    /*public void resume () {
-        running = true;
-        gameThread = new Thread(this);
-        gameThread.start();
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        if (!hasWindowFocus) gameThread.pause();
     }
 
-    public void pause () {
-        boolean retry = true;
-        running = false;
-        while (retry) {
-            try {
-                gameThread.join();
-                retry = false;
-            } catch (InterruptedException iE) {
-                iE.printStackTrace();
-            }
-        }
-    }*/
-
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) { }
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,int height) {
+        gameThread.setSurfaceSize(width, height);
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -100,8 +53,15 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+       boolean retry = true;
         gameThread.setRunning(false);
-        gameThread.stop();
+        while (retry) {
+            try {
+                gameThread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
 
@@ -193,5 +153,9 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
 
         return true;
+    }
+
+    public PuzzleThread getThread () {
+        return gameThread;
     }
 }
