@@ -23,6 +23,7 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
     private JigsawPuzzle puzzle;
     private BitmapDrawable[] scaledSurfacePuzzlePieces;
     private Rect[] scaledSurfaceTargetBounds;
+    private BitmapDrawable backgroundImage;
 
     public PuzzleCompactSurface(Context context) {
         super(context);
@@ -74,6 +75,11 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
         puzzle = jigsawPuzzle;
         Random r = new Random();
 
+        if (puzzle.isBackgroundTextureOn()) {
+            backgroundImage = new BitmapDrawable(puzzle.getBackgroundTexture());
+            backgroundImage.setBounds(0, 0, outSize.x, outSize.y);
+        }
+
         /** Initialize drawables from puzzle pieces **/
         Bitmap[] originalPieces = puzzle.getPuzzlePiecesArray();
         int[][] positions = puzzle.getPuzzlePieceTargetPositions();
@@ -82,7 +88,6 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
         scaledSurfacePuzzlePieces = new BitmapDrawable[originalPieces.length];
         scaledSurfaceTargetBounds = new Rect[originalPieces.length];
 
-        Toast.makeText(getContext(), outSize.x + " " + outSize.y, Toast.LENGTH_LONG).show();
         for (int i = 0; i < originalPieces.length; i++) {
 
             scaledSurfacePuzzlePieces[i] = new BitmapDrawable(originalPieces[i]);
@@ -113,6 +118,11 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
         super.onDraw(canvas);
 
         canvas.drawColor(Color.BLACK);
+
+        if (puzzle.isBackgroundTextureOn()) {
+            backgroundImage.draw(canvas);
+        }
+
         for (int bmd = 0; bmd < scaledSurfacePuzzlePieces.length; bmd++) {
             scaledSurfacePuzzlePieces[bmd].draw(canvas);
         }

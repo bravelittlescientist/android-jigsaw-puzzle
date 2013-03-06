@@ -18,6 +18,9 @@ public class JigsawPuzzle {
     protected static int puzzleGridX;
     protected static int puzzleGridY;
 
+    private boolean backgroundTextureOn = true;
+    private Bitmap backgroundTexture;
+
     private Bundle config;
 
     private Bitmap puzzleResult;
@@ -44,16 +47,6 @@ public class JigsawPuzzle {
      * JigsawPuzzle constructor: Bundle configuration
      * @param context
      * @param configuration
-     *
-     * A bundle containing bundles of puzzle information as follows:
-     *  Key String  | Value(s)
-     *  -------------------------------
-     *  "pieces"        A Bundle of Bundles containing puzzle piece metadata
-     *
-     *  "grid"          A Bundle containing grid and dimensions
-     *
-     *  "image"         Bundle containing an image url, base width, and base height
-     *
      */
     public JigsawPuzzle(Context context, Bundle configuration) {
         config = configuration;
@@ -65,6 +58,8 @@ public class JigsawPuzzle {
     }
 
     public void loadPuzzleResources (Resources res, int resourceId, long targetWidth, long targetHeight) {
+
+        backgroundTexture = decodePuzzleBitmapFromResource(res, R.drawable.background, 800, 800);
 
         Bitmap decodedPuzzleResource = decodePuzzleBitmapFromResource(
                 res, resourceId, targetWidth, targetHeight);
@@ -228,6 +223,18 @@ public class JigsawPuzzle {
 
     public Bundle getConfig() {
         return config;
+    }
+
+    public boolean isBackgroundTextureOn() {
+        return backgroundTextureOn;
+    }
+
+    public void setBackgroundTextureOn(boolean texture) {
+        backgroundTextureOn = texture;
+    }
+
+    public Bitmap getBackgroundTexture() {
+        return backgroundTexture;
     }
 
     public void setPieceLocked (int piece, boolean locked) {
