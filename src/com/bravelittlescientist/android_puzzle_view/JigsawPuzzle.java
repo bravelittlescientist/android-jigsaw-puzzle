@@ -18,7 +18,6 @@ public class JigsawPuzzle {
     protected static int puzzleGridX;
     protected static int puzzleGridY;
 
-    // Todo
     private Bundle config;
 
     private Bitmap puzzleResult;
@@ -187,10 +186,10 @@ public class JigsawPuzzle {
         Bundle pieces = config.getBundle("pieces");
 
         // Puzzle Grid
-        puzzlePieceHeight = grid.getInt("cellh");
-        puzzlePieceWidth = grid.getInt("cellw");
-        puzzleGridX = puzzleXDimension / puzzlePieceWidth;
-        puzzleGridY = puzzleYDimension / puzzlePieceHeight;
+        puzzleGridX = grid.getInt("ncols");
+        puzzleGridY = grid.getInt("nrows");
+        puzzlePieceHeight = puzzleYDimension / puzzleGridY;
+        puzzlePieceWidth = puzzleXDimension / puzzleGridX;
 
         // Fill Puzzle
         puzzlePieceTargetPositions = new int[puzzleGridX][puzzleGridY];
@@ -225,6 +224,10 @@ public class JigsawPuzzle {
 
     public int[][] getPuzzlePieceTargetPositions () {
         return puzzlePieceTargetPositions;
+    }
+
+    public Bundle getConfig() {
+        return config;
     }
 
     public void setPieceLocked (int piece, boolean locked) {
