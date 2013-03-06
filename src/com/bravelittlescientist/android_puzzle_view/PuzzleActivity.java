@@ -15,8 +15,10 @@ public class PuzzleActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
+        Bundle config = ExampleJigsawConfigurations.getKittenExample();
+
         puzzleSurface = new PuzzleCompactSurface(this);
-        JigsawPuzzle jigsawPuzzle = new JigsawPuzzle(getResources(), R.drawable.kitten_large);
+        JigsawPuzzle jigsawPuzzle = new JigsawPuzzle(this, config);
         puzzleSurface.setPuzzle(jigsawPuzzle);
 
         setContentView(puzzleSurface);

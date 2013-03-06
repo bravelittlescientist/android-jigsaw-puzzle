@@ -1,8 +1,11 @@
 package com.bravelittlescientist.android_puzzle_view;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.widget.Toast;
 
 public class JigsawPuzzle {
 
@@ -15,14 +18,52 @@ public class JigsawPuzzle {
     protected static int puzzleGridX;
     protected static int puzzleGridY;
 
+    // Todo
+    private Bundle config;
+
     private Bitmap puzzleResult;
     private Bitmap[] puzzlePiecesArray;
     private int[][] puzzlePieceTargetPositions;
     private boolean[] pieceLocked;
 
+    private Context mContext;
+
+    /**
+     * JigsawPuzzle constructor: Dynamic Configuration
+     * @param res
+     * @param resourceId
+     *
+     * This jigsaw puzzle will be configured dynamically by partitioning
+     * the provided source image.
+     */
     public JigsawPuzzle(Resources res, Integer resourceId) {
         loadPuzzleResources(res, resourceId);
         buildDynamicPuzzleGrid();
+    }
+
+    /**
+     * JigsawPuzzle constructor: Bundle configuration
+     * @param context
+     * @param configuration
+     *
+     * A bundle containing bundles of puzzle information as follows:
+     *  Key String  | Value(s)
+     *  -------------------------------
+     *  "pieces"        A Bundle of Bundles containing puzzle piece metadata
+     *
+     *  "grid"          A Bundle containing grid and dimensions
+     *
+     *  "image"         Bundle containing an image url, base width, and base height
+     *
+     */
+    public JigsawPuzzle(Context context, Bundle configuration) {
+        config = configuration;
+        mContext = context;
+
+        // Placeholder
+        loadPuzzleResources(mContext.getResources(), R.drawable.kitten_large);
+        //buildDynamicPuzzleGrid();
+        loadPuzzleConfiguration();
     }
 
     public void loadPuzzleResources (Resources res, int resourceId) {
@@ -142,6 +183,40 @@ public class JigsawPuzzle {
         if (n2 == 0) return n1;
         return greatestCommonDivisor(n2, n1 % n2);
     }
+
+    public void loadPuzzleConfiguration() {
+        Bundle grid = config.getBundle("grid");
+        Bundle image = config.getBundle("image");
+        Bundle pieces = config.getBundle("pieces");
+
+        // Puzzle Grid
+        puzzlePieceHeight = grid.getInt("cellh");
+        puzzlePieceWidth = grid.getInt("cellw");
+        puzzleGridX = puzzleXDimension / puzzlePieceWidth;
+        puzzleGridY = puzzleYDimension / puzzlePieceHeight;
+
+        // Fill Puzzle
+        puzzlePieceTargetPositions = new int[puzzleGridX][puzzleGridY];
+        puzzlePiecesArray = new Bitmap[puzzleGridX * puzzleGridY];
+        pieceLocked = new boolean[puzzleGridX * puzzleGridY];
+
+        int counter = 0;
+        for (int w = 0; w < puzzleGridX; w++) {
+            for (int h = 0; h < puzzleGridY; h++) {
+                puzzlePiecesArray[counter] = Bitmap.createBitmap(puzzleResult, w*puzzlePieceWidth, h*puzzlePieceHeight,
+                        puzzlePieceWidth, puzzlePieceHeight);
+
+                pieceLocked[counter] = false;
+
+                puzzlePieceTargetPositions[w][h] = counter;
+
+                counter++;
+            }
+        }
+
+    }
+
+
 
     /** Getters and Setters **/
 
