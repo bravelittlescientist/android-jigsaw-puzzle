@@ -15,7 +15,7 @@ public class PuzzleActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-        Bundle config = ExampleJigsawConfigurations.getKittenExample();
+        Bundle config = ExampleJigsawConfigurations.getRcatKittenExample();
 
         puzzleSurface = new PuzzleCompactSurface(this);
         JigsawPuzzle jigsawPuzzle = new JigsawPuzzle(this, config);

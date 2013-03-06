@@ -37,7 +37,7 @@ public class JigsawPuzzle {
      * the provided source image.
      */
     public JigsawPuzzle(Resources res, Integer resourceId) {
-        loadPuzzleResources(res, resourceId);
+        loadPuzzleResources(res, resourceId, 450, 300);
         buildDynamicPuzzleGrid();
     }
 
@@ -60,16 +60,13 @@ public class JigsawPuzzle {
         config = configuration;
         mContext = context;
 
-        // Placeholder
-        loadPuzzleResources(mContext.getResources(), R.drawable.kitten_large);
-        //buildDynamicPuzzleGrid();
+        loadPuzzleResources(mContext.getResources(),
+                config.getBundle("img").getInt("img_local"), 400, 300);
         loadPuzzleConfiguration();
     }
 
-    public void loadPuzzleResources (Resources res, int resourceId) {
+    public void loadPuzzleResources (Resources res, int resourceId, long targetWidth, long targetHeight) {
 
-        long targetWidth =  450; // TODO hardcoded for testing
-        long targetHeight = 300; // TODO hardcoded for testing
         Bitmap decodedPuzzleResource = decodePuzzleBitmapFromResource(
                 res, resourceId, targetWidth, targetHeight);
 
@@ -186,7 +183,7 @@ public class JigsawPuzzle {
 
     public void loadPuzzleConfiguration() {
         Bundle grid = config.getBundle("grid");
-        Bundle image = config.getBundle("image");
+        Bundle image = config.getBundle("img");
         Bundle pieces = config.getBundle("pieces");
 
         // Puzzle Grid
@@ -215,8 +212,6 @@ public class JigsawPuzzle {
         }
 
     }
-
-
 
     /** Getters and Setters **/
 
