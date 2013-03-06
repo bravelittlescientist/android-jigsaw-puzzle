@@ -251,4 +251,17 @@ public class JigsawPuzzle {
 
         }
     }
+
+    /** Jigsaw Puzzle Message Handlers - Probably Override **/
+    public void onJigsawEventPieceGrabbed (int index, int topLeftX, int topLeftY) {
+
+    }
+
+    public void onJigsawEventPieceMoved (int index, int topLeftX, int topLeftY) {
+
+    }
+
+    public void onJigsawEventPieceDropped (int index, int topLeftX, int topLeftY) {
+
+    }
 }

@@ -156,6 +156,9 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
                     if (place.contains(xPos, yPos) && !puzzle.isPieceLocked(i)) {
                         found = i;
+
+                        // Trigger puzzle piece picked up
+                        puzzle.onJigsawEventPieceGrabbed(found, place.left, place.top);
                     }
                 }
                 break;
@@ -167,6 +170,14 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
                     if (scaledSurfaceTargetBounds[found].contains(xPos, yPos) ) {
                         scaledSurfacePuzzlePieces[found].setBounds(scaledSurfaceTargetBounds[found]);
                         puzzle.setPieceLocked(found, true);
+
+                        // Trigger jigsaw piece events
+                        puzzle.onJigsawEventPieceMoved(found,
+                                scaledSurfacePuzzlePieces[found].copyBounds().left,
+                                scaledSurfacePuzzlePieces[found].copyBounds().top);
+                        puzzle.onJigsawEventPieceDropped(found,
+                                scaledSurfacePuzzlePieces[found].copyBounds().left,
+                                scaledSurfacePuzzlePieces[found].copyBounds().top);
                     } else {
                         Rect rect = scaledSurfacePuzzlePieces[found].copyBounds();
 
@@ -175,11 +186,18 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
                         rect.right = xPos + MAX_PUZZLE_PIECE_SIZE/2;
                         rect.bottom = yPos + MAX_PUZZLE_PIECE_SIZE/2;
                         scaledSurfacePuzzlePieces[found].setBounds(rect);
+
+                        // Trigger jigsaw piece event
+                        puzzle.onJigsawEventPieceMoved(found, rect.left, rect.top);
                     }
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
+                // Trigger jigsaw piece event
+                if (found >= 0 && found < scaledSurfacePuzzlePieces.length) {
+                    puzzle.onJigsawEventPieceDropped(found, xPos, yPos);
+                }
                 found = -1;
                 break;
 
