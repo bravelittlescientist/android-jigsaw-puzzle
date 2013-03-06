@@ -23,7 +23,9 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
     private JigsawPuzzle puzzle;
     private BitmapDrawable[] scaledSurfacePuzzlePieces;
     private Rect[] scaledSurfaceTargetBounds;
+
     private BitmapDrawable backgroundImage;
+    private Paint framePaint;
 
     public PuzzleCompactSurface(Context context) {
         super(context);
@@ -79,6 +81,10 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
             backgroundImage = new BitmapDrawable(puzzle.getBackgroundTexture());
             backgroundImage.setBounds(0, 0, outSize.x, outSize.y);
         }
+        framePaint = new Paint();
+        framePaint.setColor(Color.BLACK);
+        framePaint.setStyle(Paint.Style.STROKE);
+        framePaint.setTextSize(20);
 
         /** Initialize drawables from puzzle pieces **/
         Bitmap[] originalPieces = puzzle.getPuzzlePiecesArray();
@@ -122,9 +128,18 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
         if (puzzle.isBackgroundTextureOn()) {
             backgroundImage.draw(canvas);
         }
+        canvas.drawRect(20, 20, 420, 320, framePaint);
 
         for (int bmd = 0; bmd < scaledSurfacePuzzlePieces.length; bmd++) {
-            scaledSurfacePuzzlePieces[bmd].draw(canvas);
+            if (puzzle.isPieceLocked(bmd)) {
+                scaledSurfacePuzzlePieces[bmd].draw(canvas);
+            }
+        }
+
+        for (int bmd = 0; bmd < scaledSurfacePuzzlePieces.length; bmd++) {
+            if (!puzzle.isPieceLocked(bmd)) {
+                scaledSurfacePuzzlePieces[bmd].draw(canvas);
+            }
         }
     }
 
@@ -137,12 +152,9 @@ public class PuzzleCompactSurface extends SurfaceView implements SurfaceHolder.C
 
             case MotionEvent.ACTION_DOWN:
                 for (int i = 0; i < scaledSurfacePuzzlePieces.length; i++) {
-                    Rect place = scaledSurfacePuzzlePieces[i].getBounds();
+                    Rect place = scaledSurfacePuzzlePieces[i].copyBounds();
 
-                    if (xPos >= place.left &&
-                            xPos <= place.right &&
-                            yPos <= place.bottom &&
-                            yPos >= place.top) {
+                    if (place.contains(xPos, yPos) && !puzzle.isPieceLocked(i)) {
                         found = i;
                     }
                 }
